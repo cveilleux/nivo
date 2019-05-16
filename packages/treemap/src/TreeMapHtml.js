@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import React from 'react'
+import React, { memo } from 'react'
 import { TransitionMotion, spring } from 'react-motion'
 import { Container } from '@nivo/core'
 import { interpolateColor, getInterpolatedColor } from '@nivo/colors'
@@ -154,4 +154,4 @@ TreeMapHtml.displayName = 'TreeMapHtml'
 const enhancedTreeMapHtml = enhance(TreeMapHtml)
 enhancedTreeMapHtml.displayName = 'TreeMapHtml'
 
-export default enhancedTreeMapHtml
+export default memo(enhancedTreeMapHtml)

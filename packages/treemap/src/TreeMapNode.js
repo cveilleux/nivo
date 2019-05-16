@@ -8,9 +8,10 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { themePropType } from '@nivo/core'
+import { useTheme } from '@nivo/core'
 
-const TreeMapNode = ({ style, node, handlers, theme }) => {
+const TreeMapNode = ({ style, node, handlers }) => {
+    const theme = useTheme()
     if (style.width <= 0 || style.height <= 0) return null
 
     const rotate = node.label && style.orientLabel && style.height > style.width
@@ -59,7 +60,6 @@ TreeMapNode.propTypes = {
         orientLabel: PropTypes.bool.isRequired,
     }).isRequired,
     handlers: PropTypes.object.isRequired,
-    theme: themePropType.isRequired,
 }
 
 export default TreeMapNode

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 import PropTypes from 'prop-types'
-import { noop, treeMapTilePropType, defsPropTypes } from '@nivo/core'
+import { noop, treeMapTilePropType, defsPropTypes, motionPropTypes } from '@nivo/core'
 import {
     ordinalColorsPropType,
     colorPropertyAccessorPropType,
@@ -44,7 +44,10 @@ const commonPropTypes = {
     borderColor: inheritedColorPropType.isRequired,
 
     isInteractive: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onMouseEnter: PropTypes.func,
+    onMouseMove: PropTypes.func,
+    onMouseLeave: PropTypes.func,
+    onClick: PropTypes.func,
     tooltip: PropTypes.func,
 }
 
@@ -52,11 +55,13 @@ export const TreeMapPropTypes = {
     ...commonPropTypes,
     nodeComponent: PropTypes.func.isRequired,
     ...defsPropTypes,
+    ...motionPropTypes,
 }
 
 export const TreeMapHtmlPropTypes = {
     ...commonPropTypes,
     nodeComponent: PropTypes.func.isRequired,
+    ...motionPropTypes,
 }
 
 export const TreeMapCanvasPropTypes = {

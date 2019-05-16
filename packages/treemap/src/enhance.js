@@ -11,11 +11,9 @@ import cloneDeep from 'lodash/cloneDeep'
 import compose from 'recompose/compose'
 import defaultProps from 'recompose/defaultProps'
 import withPropsOnChange from 'recompose/withPropsOnChange'
-import pure from 'recompose/pure'
 import {
     withHierarchy,
     withDimensions,
-    withTheme,
     withMotion,
     getAccessorFor,
     getLabelGenerator,
@@ -34,8 +32,6 @@ const computeNodePath = (node, getIdentity) =>
 const commonEnhancers = [
     withHierarchy(),
     withDimensions(),
-    withTheme(),
-    withMotion(),
     withPropsOnChange(['colors', 'colorBy'], ({ colors, colorBy }) => ({
         getColor: getOrdinalColorScale(colors, colorBy),
     })),
@@ -128,17 +124,16 @@ export default Component => {
                     ...commonEnhancers,
                     ...svgEnhancers,
                     withMotion(),
-                    pure,
                 ]
             )(Component)
 
         case 'TreeMapHtml':
             return compose(
-                ...[defaultProps(implDefaultProps), ...commonEnhancers, withMotion(), pure]
+                ...[defaultProps(implDefaultProps), ...commonEnhancers, withMotion()]
             )(Component)
 
         case 'TreeMapCanvas':
-            return compose(...[defaultProps(implDefaultProps), ...commonEnhancers, pure])(Component)
+            return compose(...[defaultProps(implDefaultProps), ...commonEnhancers])(Component)
     }
 
     return Component
