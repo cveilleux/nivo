@@ -18,8 +18,8 @@ import { generateLightDataSet } from '../../data/components/treemap/generator'
 const initialProperties = {
     identity: 'name',
     value: 'loc',
-    tile: 'squarify',
-    leavesOnly: false,
+    tile: TreeMapDefaultProps.tile,
+    leavesOnly: TreeMapDefaultProps.leavesOnly,
     innerPadding: 3,
     outerPadding: 3,
 
@@ -41,18 +41,20 @@ const initialProperties = {
     orientLabel: true,
 
     colors: { scheme: 'red_yellow_blue' },
-    colorBy: 'depth',
-    borderWidth: 0,
+    colorBy: TreeMapDefaultProps.colorBy,
+    borderWidth: TreeMapDefaultProps.borderWidth,
+    activeBorderWidth: TreeMapDefaultProps.activeBorderWidth,
+    inactiveBorderWidth: TreeMapDefaultProps.inactiveBorderWidth,
     borderColor: {
         from: 'color',
         modifiers: [['darker', 0.3]],
     },
 
-    animate: true,
-    motionStiffness: 90,
-    motionDamping: 11,
+    isInteractive: TreeMapDefaultProps.isInteractive,
 
-    isInteractive: true,
+    animate: TreeMapDefaultProps.animate,
+    motionStiffness: TreeMapDefaultProps.motionStiffness,
+    motionDamping: TreeMapDefaultProps.motionDamping,
 }
 
 const TreeMapHtml = () => {

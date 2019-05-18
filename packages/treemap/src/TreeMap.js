@@ -8,32 +8,37 @@
  */
 import React, { memo } from 'react'
 import { TransitionMotion, spring } from 'react-motion'
-import { withContainer, SvgWrapper, useTheme } from '@nivo/core'
+import { withContainer, SvgWrapper, useDimensions, useTheme, useMotionConfig } from '@nivo/core'
 import { interpolateColor, getInterpolatedColor } from '@nivo/colors'
 import { useTooltip } from '@nivo/tooltip'
-import { TreeMapPropTypes } from './props'
-import enhance from './enhance'
+import { TreeMapPropTypes, TreeMapDefaultProps } from './props'
 import { nodeWillEnter, nodeWillLeave } from './motion'
 import { getNodeHandlers } from './interactivity'
+import { useTreeMap } from './hooks'
 
 const TreeMap = ({
-    nodes,
+    width,
+    height,
+    margin: partialMargin,
+
+    root,
+    identity,
+    value,
     nodeComponent,
 
-    margin,
-    outerWidth,
-    outerHeight,
+    tile,
+    innerPadding,
+    outerPadding,
+    leavesOnly,
 
+    colors,
+    colorBy,
     borderWidth,
-    getBorderColor,
+    borderColor,
     defs,
 
-    getLabelTextColor,
+    labelTextColor,
     orientLabel,
-
-    animate,
-    motionStiffness,
-    motionDamping,
 
     isInteractive,
     onMouseEnter,
@@ -44,12 +49,29 @@ const TreeMap = ({
     tooltip,
 }) => {
     const theme = useTheme()
-    const springConfig = {
-        stiffness: motionStiffness,
-        damping: motionDamping,
-    }
-
+    const { margin, innerWidth, innerHeight, outerWidth, outerHeight } = useDimensions(
+        width,
+        height,
+        partialMargin
+    )
+    const { animate, springConfig } = useMotionConfig()
     const { showTooltipFromEvent, hideTooltip } = useTooltip()
+
+    const { nodes } = useTreeMap({
+        root,
+        identity,
+        value,
+        width: innerWidth,
+        height: innerHeight,
+        tile,
+        innerPadding,
+        outerPadding,
+        leavesOnly,
+        colors,
+        colorBy,
+        borderColor,
+        labelTextColor,
+    })
 
     const getHandlers = node =>
         getNodeHandlers(node, {
@@ -71,7 +93,7 @@ const TreeMap = ({
             theme={theme}
         >
             {!animate && (
-                <g>
+                <>
                     {nodes.map(node =>
                         React.createElement(nodeComponent, {
                             key: node.path,
@@ -84,14 +106,14 @@ const TreeMap = ({
                                 height: node.height,
                                 color: node.color,
                                 borderWidth,
-                                borderColor: getBorderColor(node),
-                                labelTextColor: getLabelTextColor(node),
+                                borderColor: node.style.borderColor,
+                                labelTextColor: node.style.labelTextColor,
                                 orientLabel,
                             },
                             handlers: getHandlers(node),
                         })
                     )}
-                </g>
+                </>
             )}
             {animate && (
                 <TransitionMotion
@@ -110,7 +132,7 @@ const TreeMap = ({
                     }))}
                 >
                     {interpolatedStyles => (
-                        <g>
+                        <>
                             {interpolatedStyles.map(({ style, data: node }) => {
                                 style.color = getInterpolatedColor(style)
 
@@ -121,14 +143,14 @@ const TreeMap = ({
                                         ...style,
                                         fill: node.fill,
                                         borderWidth,
-                                        borderColor: getBorderColor(style),
-                                        labelTextColor: getLabelTextColor(style),
+                                        borderColor: node.style.borderColor,
+                                        labelTextColor: node.style.labelTextColor,
                                         orientLabel,
                                     },
                                     handlers: getHandlers(node),
                                 })
                             })}
-                        </g>
+                        </>
                     )}
                 </TransitionMotion>
             )}
@@ -137,9 +159,6 @@ const TreeMap = ({
 }
 
 TreeMap.propTypes = TreeMapPropTypes
-TreeMap.displayName = 'TreeMap'
+TreeMap.defaultProps = TreeMapDefaultProps
 
-const enhancedTreeMap = enhance(TreeMap)
-enhancedTreeMap.displayName = 'TreeMap'
-
-export default memo(withContainer(enhancedTreeMap))
+export default memo(withContainer(TreeMap))

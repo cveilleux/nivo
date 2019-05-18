@@ -17,21 +17,28 @@ import TreeMapNode from './TreeMapNode'
 import TreeMapHtmlNode from './TreeMapHtmlNode'
 
 const commonPropTypes = {
-    // data
-    // `root` managed by `withHierarchy()` HOC
     identity: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-
-    // dimensions managed by `withDimensions()` HOC
-
-    // styling
-    // theme managed by `withTheme()` HOC
-    colors: ordinalColorsPropType.isRequired,
-    colorBy: colorPropertyAccessorPropType.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+    valueFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
     leavesOnly: PropTypes.bool.isRequired,
     tile: treeMapTilePropType.isRequired,
     innerPadding: PropTypes.number.isRequired,
     outerPadding: PropTypes.number.isRequired,
+
+    layers: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+            PropTypes.oneOf(['nodes']),
+            PropTypes.func,
+        ])
+    ).isRequired,
+
+    colors: ordinalColorsPropType.isRequired,
+    colorBy: colorPropertyAccessorPropType.isRequired,
+    borderWidth: PropTypes.number.isRequired,
+    activeBorderWidth: PropTypes.number.isRequired,
+    inactiveBorderWidth: PropTypes.number.isRequired,
+    borderColor: inheritedColorPropType.isRequired,
 
     enableLabel: PropTypes.bool.isRequired,
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
@@ -39,9 +46,6 @@ const commonPropTypes = {
     labelSkipSize: PropTypes.number.isRequired,
     labelTextColor: inheritedColorPropType.isRequired,
     orientLabel: PropTypes.bool.isRequired,
-
-    borderWidth: PropTypes.number.isRequired,
-    borderColor: inheritedColorPropType.isRequired,
 
     isInteractive: PropTypes.bool.isRequired,
     onMouseEnter: PropTypes.func,
@@ -71,24 +75,27 @@ export const TreeMapCanvasPropTypes = {
 
 const commonDefaultProps = {
     identity: 'id',
+    value: 'value',
 
-    tile: 'squarify',
     leavesOnly: false,
+    tile: 'squarify',
+    innerPadding: 0,
+    outerPadding: 0,
+
+    layers: ['nodes'],
 
     colors: { scheme: 'nivo' },
     colorBy: 'depth',
+    borderWidth: 0,
+    activeBorderWidth: 1,
+    inactiveBorderWidth: 0,
+    borderColor: { from: 'color' },
 
     enableLabel: true,
     label: 'id',
     labelSkipSize: 0,
     labelTextColor: { from: 'color', modifiers: [['darker', 1]] },
     orientLabel: true,
-
-    innerPadding: 0,
-    outerPadding: 0,
-
-    borderWidth: 0,
-    borderColor: { from: 'color' },
 
     isInteractive: true,
     onClick: noop,
@@ -99,11 +106,17 @@ export const TreeMapDefaultProps = {
     nodeComponent: TreeMapNode,
     defs: [],
     fill: [],
+    animate: true,
+    motionStiffness: 90,
+    motionDamping: 15,
 }
 
 export const TreeMapHtmlDefaultProps = {
     ...commonDefaultProps,
     nodeComponent: TreeMapHtmlNode,
+    animate: true,
+    motionStiffness: 90,
+    motionDamping: 15,
 }
 
 export const TreeMapCanvasDefaultProps = {
